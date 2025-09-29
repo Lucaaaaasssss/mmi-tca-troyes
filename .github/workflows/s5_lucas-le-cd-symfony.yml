@@ -85,16 +85,23 @@ jobs:
 
       - name: Create artifact tarball
         run: |
-          mkdir -p build_artifact
-          cp -R bin config migrations public src templates vendor var composer.json composer.lock .env.local.php build_artifact/ 2>/dev/null || true
-          if [ -d public/build ]; then mkdir -p build_artifact/public && cp -R public/build build_artifact/public/; fi
-          if [ -d public/assets ]; then mkdir -p build_artifact/public && cp -R public/assets build_artifact/public/; fi
-          if [ -f symfony.apache.conf ]; then cp symfony.apache.conf build_artifact/; fi
-          tar -czf symfony-artifact-r1.tar.gz -C build_artifact .
+          tar -czvf symfony-artifact-r1.tar.gz \
+            --exclude=.git \
+            --exclude=node_modules \
+            --exclude=var/cache \
+            --exclude=var/log \
+            --exclude=tests \
+            --exclude=.env \
+            --exclude=docker \
+            --exclude=docker-compose.yml \
+            --exclude=README.md \
+            --exclude=*.log \
+            --exclude=*.gitignore \
+            .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: symfony-artifact
           path: symfony-artifact-r1.tar.gz
-          if-no-files-found: error
+
