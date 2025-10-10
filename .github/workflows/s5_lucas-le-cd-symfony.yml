@@ -98,6 +98,12 @@ jobs:
             --exclude=*.log \
             --exclude=*.gitignore \
             .
+          
+      - name: Debug workspace
+        run: |
+          pwd
+          ls -la
+          ls -la symfony-artifact-r1.tar.gz || true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
